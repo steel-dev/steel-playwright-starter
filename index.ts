@@ -6,16 +6,16 @@ dotenv.config();
 
 const STEEL_API_KEY = process.env.STEEL_API_KEY;
 
+// Initialize Steel client with the API key from environment variables
+const client = new Steel({
+  steelAPIKey: STEEL_API_KEY,
+});
+
 async function main() {
   let session;
   let browser;
 
   try {
-    // Initialize Steel client with the API key from environment variables
-    const client = new Steel({
-      steelAPIKey: STEEL_API_KEY,
-    });
-
     console.log("Creating Steel session...");
 
     // Create a new Steel session with all available options
@@ -34,9 +34,7 @@ You can view the session live at ${session.sessionViewerUrl}
     `);
 
     // Connect Playwright to the Steel session
-    browser = await chromium.connectOverCDP(
-      `wss://connect.steel.dev?apiKey=${STEEL_API_KEY}&sessionId=${session.id}`
-    );
+    browser = await chromium.connectOverCDP(`wss://connect.steel.dev?apiKey=${STEEL_API_KEY}&sessionId=${session.id}`);
 
     console.log("Connected to browser via Playwright");
 
@@ -97,9 +95,6 @@ You can view the session live at ${session.sessionViewerUrl}
 
     if (session) {
       console.log("Releasing session...");
-      const client = new Steel({
-        steelAPIKey: STEEL_API_KEY,
-      });
       await client.sessions.release(session.id);
       console.log("Session released");
     }
